@@ -3,10 +3,13 @@ import type { App } from 'vue'
 import router from '../router'
 import pinia from './pinia'
 import vuetify from './vuetify'
+import prepare from './mswjs'
 
-export function registerPlugins(app: App) {
-  app
-    .use(vuetify)
-    .use(router)
-    .use(pinia)
+export async function registerPlugins(app: App) {
+  await prepare().then(() => {
+    app
+      .use(vuetify)
+      .use(router)
+      .use(pinia)
+  })
 }
