@@ -4,12 +4,11 @@ const steps = [
   { id: 1, title: 'Informações do Usuário' },
   { id: 2, title: 'Endereço de Entrega' },
   { id: 3, title: 'Pagamento' },
-  { id: 4, title: 'Revisão' },
 ]
 </script>
 
 <template>
-  <v-stepper v-model="step" color="indigo">
+  <v-stepper v-model="step" class="w-50" color="indigo">
     <template #default="{ prev, next }">
       <v-stepper-header>
         <template v-for="n in steps" :key="n.id">
@@ -42,3 +41,9 @@ const steps = [
     </template>
   </v-stepper>
 </template>
+
+<style>
+  .v-stepper-header {
+  box-shadow: 0px 0px;
+}
+</style>
