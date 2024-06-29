@@ -1,3 +1,4 @@
+/* eslint-disable ts/strict-boolean-expressions */
 interface Data {
   cep: string
   logradouro: string
@@ -14,15 +15,22 @@ interface Data {
 export async function useValidatePostalCode(code: number | string) {
   const isValid = ref<boolean>(false)
 
-  const { error, data } = await useFetch<Data>(`https://viacep.com.br/ws/${code}/json/`, {
+  const { error, data } = await useFetch(`https://viacep.com.br/ws/${code}/json/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   })
 
-  if (data.value)
+  if (error.value || data.value === null) {
+    isValid.value = false
+
+    return { isValid }
+  }
+  else {
+    const response = JSON.parse(data.value as string) as Data
     isValid.value = true
 
-  return { isValid, data, error }
+    return { isValid, response, error }
+  }
 }
