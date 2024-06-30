@@ -2,16 +2,27 @@
 <script setup lang="ts">
 import { object, string } from 'yup'
 import { useField, useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/yup'
+
+const initialValues = {
+  name: '',
+  email: '',
+  phone: '',
+}
 
 const { validate, values } = useForm({
-  validationSchema: object({
-    name: string().required('Campo obrigatório'),
-    email: string().email('Email inválido'),
-    phone: string()
-      .matches(/(?:^\(0?[1-9]{2}\)|^0?[1-9]{2}[.-\s]?)9?[1-9]\d{3}[.-\s]?\d{4}$/, 'Número de telefone inválido')
-      .required('Campo obrigatório'),
-  }),
+  initialValues,
+  validationSchema: toTypedSchema(
+    object({
+      name: string().required('Campo obrigatório'),
+      email: string().email('Email inválido'),
+      phone: string()
+        .matches(/(?:^\(0?[1-9]{2}\)|^0?[1-9]{2}[.-\s]?)9?[1-9]\d{3}[.-\s]?\d{4}$/, 'Número de telefone inválido')
+        .required('Campo obrigatório'),
+    }),
+  ),
 })
+
 const { value: name, errorMessage: nameError } = useField('name')
 const { value: email, errorMessage: emailError } = useField('email')
 const { value: phone, errorMessage: phoneError } = useField('phone')
@@ -24,7 +35,7 @@ const addValues = inject(AddValuesKey, () => {
 })
 
 addValidator(validate)
-addValues(values)
+addValues({ userValues: values })
 </script>
 
 <template>

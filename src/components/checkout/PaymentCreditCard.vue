@@ -1,17 +1,30 @@
 <script setup lang="ts">
-import * as yup from 'yup'
+import { number, object, string } from 'yup'
 import { useField, useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/yup'
 
-const { validate, values } = useForm({
-  validationSchema: yup.object({
-    holder: yup.string().required('Campo obrigatório'),
-    cardNumber: yup.number().required('Campo obrigatório'),
-    cardMonth: yup.number().required('Campo obrigatório'),
-    cardYear: yup.number().required('Campo obrigatório'),
-    cardCvv: yup.number().required('Campo obrigatório'),
+const initialValues = {
+  holder: '',
+  cardNumber: undefined,
+  cardMonth: undefined,
+  cardYear: undefined,
+  cardCvv: undefined,
+}
 
-  }),
+const { validate } = useForm({
+  initialValues,
+  validationSchema: toTypedSchema(
+    object({
+      holder: string().required('Campo obrigatório'),
+      cardNumber: number().required('Campo obrigatório'),
+      cardMonth: number().required('Campo obrigatório'),
+      cardYear: number().required('Campo obrigatório'),
+      cardCvv: number().required('Campo obrigatório'),
+
+    }),
+  ),
 })
+
 const { value: holder, errorMessage: holderError } = useField('holder')
 const { value: cardNumber, errorMessage: cardNumberError } = useField('cardNumber')
 const { value: cardMonth, errorMessage: cardMonthError } = useField('cardMonth')
@@ -21,12 +34,8 @@ const { value: cardCvv, errorMessage: cardCvvError } = useField('cardCvv')
 const addValidator = inject(AddValidatorKey, () => {
   throw new Error('No aggregator provided')
 })
-const addValues = inject(AddValuesKey, () => {
-  throw new Error('No aggregator provided')
-})
 
 addValidator(validate)
-addValues(values)
 </script>
 
 <template>

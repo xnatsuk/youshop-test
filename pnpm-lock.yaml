@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@vee-validate/yup':
+        specifier: ^4.13.1
+        version: 4.13.1(vue@3.4.30(typescript@5.5.2))
       vee-validate:
         specifier: ^4.13.1
         version: 4.13.1(vue@3.4.30(typescript@5.5.2))

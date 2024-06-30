@@ -1,18 +1,27 @@
 <script setup lang="ts">
 import { date, object, string } from 'yup'
 import { useField, useForm, useFormValues } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/yup'
+
+const initialValues = {
+  birthday: undefined,
+  payment: '',
+  cpf: '',
+}
 
 const { validate, values } = useForm({
-  validationSchema: object({
-    birthday: date().required('Campo obrigatório'),
-    payment: string().required('Escolha uma forma de pagamento'),
-    cpf: string()
-      .matches(/(\d{3}\.\d{3}\.\d{3}-\d{2})/g, 'CPF inválido')
-      .length(14, 'CPF inválido')
-      .notOneOf(['000.000.000-00'], 'CPF inválido')
-      .required('Campo obrigatório'),
-
-  }),
+  initialValues,
+  validationSchema: toTypedSchema(
+    object({
+      birthday: date().required('Campo obrigatório'),
+      payment: string().required('Escolha uma forma de pagamento'),
+      cpf: string()
+        .matches(/(\d{3}\.\d{3}\.\d{3}-\d{2})/g, 'CPF inválido')
+        .length(14, 'CPF inválido')
+        .notOneOf(['000.000.000-00'], 'CPF inválido')
+        .required('Campo obrigatório'),
+    }),
+  ),
 })
 
 const { value: cpf, errorMessage: cpfError } = useField('cpf')
@@ -28,7 +37,7 @@ const addValues = inject(AddValuesKey, () => {
 })
 
 addValidator(validate)
-addValues(values)
+addValues({ paymentValues: values })
 </script>
 
 <template>
