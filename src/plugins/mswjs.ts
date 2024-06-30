@@ -1,6 +1,5 @@
-export default async function prepare() {
-  const { worker } = await import('@/mocks/browser')
-  await worker.start()
+import { worker } from '@/mocks/browser'
 
-  return Promise.resolve()
+export default async function initMocks() {
+  await worker.start()
 }
