@@ -28,33 +28,25 @@ export interface ShippingInfo {
 export interface PaymentInfo {
   cpf: string
   birthday: string
-  total: number
-  type: 'card' | 'pix' | 'invoice'
+  payment: 'card' | 'pix' | 'invoice'
 }
 
 export interface CheckoutInfo {
-  client?: UserInfo
-  shipping?: ShippingInfo
-  payment?: PaymentInfo
-  total?: number
-}
-
-export interface CheckoutRequestBody {
-  data: CheckoutInfo
+  user: UserInfo
+  shipping: ShippingInfo
+  payment: PaymentInfo
+  total: number
 }
 
 export interface OrderSuccessResponse {
   orderCode: number
   total: number
   shipping: ShippingInfo
-  client: UserInfo
+  user: UserInfo
+  status?: string
   invoice?: string
   pix?: string
 }
 
-export interface OrderErrorResponse {
-  status: string
-  message: string
-}
-
-export type Order = OrderSuccessResponse | OrderErrorResponse
+export interface CheckoutRequestBody { order: CheckoutInfo }
+export type Order = OrderSuccessResponse | undefined
