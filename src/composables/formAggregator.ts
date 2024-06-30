@@ -44,9 +44,7 @@ export function useValuesAggregator() {
 
   const getValues = () => {
     return values.value.map((v) => {
-      const obj = { ...v }
-      const { ...items } = obj
-
+      const { ...items } = { ...v }
       return items
     })
   }

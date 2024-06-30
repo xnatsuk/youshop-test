@@ -1,5 +1,5 @@
 import { HttpResponse, http } from 'msw'
-import type { CheckoutInfo, CheckoutRequestBody, Order, ProductRequestParams } from '@/types'
+import type { CheckoutInfo, CheckoutRequestBody, ProductRequestParams } from '@/types'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -30,43 +30,42 @@ const data = [
   },
 ]
 
-function createOrder(data: CheckoutInfo): Order {
-  const { payment, shipping, client, total } = data
+const invoiceImage = 'https://1.bp.blogspot.com/-KRy1jKoNSZk/Vw0JRWirnnI/AAAAAAAAUdg/ZVZDImzOMxgwlk9Z73lc24tWtRbDCcpwQCLcB/s640/Boleto%2BBancario%2B-%2BPadrao%2BBanco%2Bdo%2BBrasil.png'
+const pixImage = 'https://i.pinimg.com/originals/9e/a2/6b/9ea26b7ef2ae06994cfe34f609f307ca.jpg'
 
-  switch (payment?.type) {
+function createOrder(data: CheckoutInfo) {
+  const { payment, shipping, user, total } = data
+
+  switch (payment.payment) {
     case 'card': {
       return {
         status: 'approved',
         orderCode: Math.floor(Math.random() * 1000),
-        total: total!,
-        shipping: shipping!,
-        client: client!,
+        total,
+        shipping,
+        user,
       }
     }
     case 'invoice': {
       return {
-        invoice: 'https://1.bp.blogspot.com/-KRy1jKoNSZk/Vw0JRWirnnI/AAAAAAAAUdg/ZVZDImzOMxgwlk9Z73lc24tWtRbDCcpwQCLcB/s640/Boleto%2BBancario%2B-%2BPadrao%2BBanco%2Bdo%2BBrasil.png',
+        invoice: invoiceImage,
         orderCode: Math.floor(Math.random() * 1000),
-        total: total!,
-        shipping: shipping!,
-        client: client!,
-
+        total,
+        shipping,
+        user,
       }
     }
     case 'pix': {
       return {
-        pix: 'https://i.pinimg.com/originals/9e/a2/6b/9ea26b7ef2ae06994cfe34f609f307ca.jpg',
+        pix: pixImage,
         orderCode: Math.floor(Math.random() * 1000),
-        total: total!,
-        shipping: shipping!,
-        client: client!,
+        total,
+        shipping,
+        user,
       }
     }
     default:
-      return {
-        status: 'error',
-        message: 'Invalid payment method',
-      }
+      return new HttpResponse('Invalid payment method', { status: 400 })
   }
 }
 
@@ -85,12 +84,8 @@ export const productHandlers = [
 
 export const checkoutHandlers = [
   http.post<ProductRequestParams, CheckoutRequestBody>(`${API_URL}/offers/:offerCode/create_order`, async ({ request }) => {
-    const { data } = await request.json()
-
-    if (!data)
-      return new HttpResponse('Invalid request body', { status: 400 })
-
-    const response = createOrder(data)
+    const { order } = await request.json()
+    const response = createOrder(order)
 
     return HttpResponse.json(response)
   }),

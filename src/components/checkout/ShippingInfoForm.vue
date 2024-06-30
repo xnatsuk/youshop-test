@@ -3,8 +3,6 @@ import { object, string } from 'yup'
 import { useField, useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/yup'
 
-// const emit = defineEmits(['shippingInfoUpdated'])
-
 const initialValues = {
   postalCode: '',
   state: '',
@@ -65,7 +63,7 @@ const addValues = inject(AddValuesKey, () => {
 })
 
 addValidator(validate)
-addValues(values)
+addValues({ shippingValues: values })
 </script>
 
 <template>
