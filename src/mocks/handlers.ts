@@ -1,7 +1,7 @@
 import { HttpResponse, http } from 'msw'
 import type { CheckoutInfo, CheckoutRequestBody, ProductRequestParams } from '@/types'
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = 'https://api.deepspacestore.com'
 
 const data = [
   {
@@ -85,8 +85,13 @@ export const productHandlers = [
 export const checkoutHandlers = [
   http.post<ProductRequestParams, CheckoutRequestBody>(`${API_URL}/offers/:offerCode/create_order`, async ({ request }) => {
     const { order } = await request.json()
+    const { payment } = order
+    if (payment.cpf === '000.000.000-00') {
+      return new HttpResponse(null, { status: 400, statusText: 'Invalid CPF' })
+    }
+
     const response = createOrder(order)
 
-    return HttpResponse.json(response)
+    return HttpResponse.json(response, { status: 201 })
   }),
 ]

@@ -1,4 +1,4 @@
-/* eslint-disable ts/no-unsafe-assignment */
+/// <reference types="vitest" />
 import { URL, fileURLToPath } from 'node:url'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -68,5 +68,16 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    include: ['tests/**/*.spec.ts'],
+    root: fileURLToPath(new URL('./', import.meta.url)),
+    server: {
+      deps: {
+        inline: ['vuetify'],
+      },
+    },
   },
 })

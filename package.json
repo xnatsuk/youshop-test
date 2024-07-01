@@ -6,7 +6,9 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore"
+    "lint": "eslint . --fix --ignore-path .gitignore",
+    "test:unit": "vitest --root tests/unit",
+    "test": "cypress open"
   },
   "dependencies": {
     "@vee-validate/yup": "^4.13.1",
@@ -19,13 +21,17 @@
     "@antfu/eslint-config": "^2.21.1",
     "@babel/types": "^7.24.7",
     "@mdi/font": "^7.4.47",
+    "@testing-library/cypress": "^10.0.2",
     "@types/node": "^20.14.8",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-typescript": "^13.0.0",
+    "@vue/test-utils": "^2.4.6",
     "@vueuse/core": "^10.11.0",
     "cypress": "^13.12.0",
     "eslint": "^8.57.0",
     "eslint-plugin-format": "^0.1.2",
+    "flush-promises": "^1.0.2",
+    "jsdom": "^24.1.0",
     "msw": "^2.3.1",
     "pinia": "^2.1.7",
     "sass": "^1.77.6",
@@ -37,8 +43,10 @@
     "vite": "^5.3.1",
     "vite-plugin-vue-layouts": "^0.11.0",
     "vite-plugin-vuetify": "^2.0.3",
+    "vitest": "^1.6.0",
     "vue-router": "^4.4.0",
-    "vue-tsc": "^2.0.22"
+    "vue-tsc": "^2.0.22",
+    "wait-for-expect": "^3.0.2"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
